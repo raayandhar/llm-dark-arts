@@ -1,7 +1,28 @@
-from dataclasses import dataclass
-from tqdm import tqdm
-
-
 import transformers
 import numpy as np
 import torch
+
+from ..base import Attack
+
+class GCG(Attack):
+
+    def __init__(self, target_model, config):
+    """
+    :param target_model: a dictionary specifying the target_model (kwargs to load_model_and_tokenizer)
+    :param config: a dictionary specifying the different options for the GCG attack
+    Our configs params are as follows:
+    :config_param num_steps: number of optimization steps to use; expects int
+    :config_param adv_init: the initial adversarial string; expects string
+    :config_param search_width: the number of candidates we are sampling at each step; expects int
+    :config_param allow_non_ascii: are we going to allow non ascii tokens or not; expects boolean
+    """
+    self.num_steps = config.get("num_steps", 250)
+    self.adv_init = config.get("adv_init", "! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! !")
+    self.search_width = config.get("search_width", 512)
+    self.allow_non_ascii = config.get("allow_non_ascii", False)
+
+    def attack(self, args):
+        pass
+
+
+
