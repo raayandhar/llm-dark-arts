@@ -156,10 +156,8 @@ class GCG:
         tokenizer: transformers.PreTrainedTokenizer,
         config: GCGConfig
     ):
-        # need a load model method as well
-        default_model_path = "StruQ/models/llama-7b_SpclSpclSpcl_NaiveCompletion_2024-02-02-00-00-00"
-        self.model = load_model(model_path=default_model_path)
-        self.tokenizer = load_tokenizer(model_path=default_model_path)
+        self.model = model
+        self.tokenizer = tokenizer
         self.config = config
 
         self.embedding_layer = model.get_input_embeddings()

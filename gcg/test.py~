@@ -1,0 +1,31 @@
+import nanogcg
+import torch
+
+from nanogcg import GCGConfig
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+"""
+
+        default_model_path = "StruQ/models/llama-7b_SpclSpclSpcl_NaiveCompletion_2024-02-02-00-00-00"
+        self.model = load_model(model_path=default_model_path)
+        self.tokenizer = load_tokenizer(model_path=default_model_path)
+"""
+
+def load_model(model_path, device=t.device, **kwargs):
+    model = (
+        transformers.AutoModelForCausalLM.from_pretrained(
+            model_path, torch_dtype=torch.float16, trust_remote_code=True, **kwargs
+        )
+        .to(device)
+        .eval()
+    )
+    return model
+
+def load_tokenizer(model_path, device=t.device, **kwargs):
+    tokenizer = transformers.AutoTokenizer.from_pretrained(model_path, trust_remote_code=True, use_fast=False)
+
+    return tokenizer
+
+model_id = "StruQ/models/llama-7b_SpclSpclSpcl_NaiveCompletion_2024-02-02-00-00-00"
+model = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=torch.float16, trust_remote_code=True)
+tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True, use_fast=False)

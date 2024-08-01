@@ -10,7 +10,7 @@ INIT_CHARS = [
     "@", "#", "$", "%", "&", "*",
     "w", "x", "y", "z",
 ]
-
+"""
 def load_model(model_path, device=t.device, **kwargs):
     model = (
         transformers.AutoModelForCausalLM.from_pretrained(
@@ -25,6 +25,7 @@ def load_tokenizer(model_path, device=t.device, **kwargs):
     tokenizer = transformers.AutoTokenizer.from_pretrained(model_path, trust_remote_code=True, use_fast=False)
 
     return tokenizer
+"""
 
 def get_nonascii_toks(tokenizer, device="cpu"):
 
