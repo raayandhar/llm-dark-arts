@@ -2,6 +2,7 @@ import functools
 import gc
 import inspect
 import torch
+import transformers
 from torch import Tensor
 
 INIT_CHARS = [
@@ -10,7 +11,20 @@ INIT_CHARS = [
     "w", "x", "y", "z",
 ]
 
-# def 
+def load_model(model_path, device=t.device, **kwargs):
+    model = (
+        transformers.AutoModelForCausalLM.from_pretrained(
+            model_path, torch_dtype=torch.float16, trust_remote_code=True, **kwargs
+        )
+        .to(device)
+        .eval()
+    )
+    return model
+
+def load_tokenizer(model_path, device=t.device, **kwargs):
+    tokenizer = transformers.AutoTokenizer.from_pretrained(model_path, trust_remote_code=True, use_fast=False)
+
+    return tokenizer
 
 def get_nonascii_toks(tokenizer, device="cpu"):
 

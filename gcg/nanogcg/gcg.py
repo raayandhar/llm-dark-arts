@@ -156,11 +156,14 @@ class GCG:
         tokenizer: transformers.PreTrainedTokenizer,
         config: GCGConfig
     ):
-        self.model = model
-        self.tokenizer = tokenizer
+        # need a load model method as well
+        default_model_path = "StruQ/models/llama-7b_SpclSpclSpcl_NaiveCompletion_2024-02-02-00-00-00"
+        self.model = load_model(model_path=default_model_path)
+        self.tokenizer = load_tokenizer(model_path=default_model_path)
         self.config = config
 
         self.embedding_layer = model.get_input_embeddings()
+        # can we see if this can be used to make sure it doesn't sample INST or other separators?
         self.not_allowed_ids = None if config.allow_non_ascii else get_nonascii_toks(tokenizer, device=model.device)
 
         if model.dtype in (torch.float32, torch.float64):
