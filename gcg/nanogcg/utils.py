@@ -10,6 +10,8 @@ INIT_CHARS = [
     "w", "x", "y", "z",
 ]
 
+# def 
+
 def get_nonascii_toks(tokenizer, device="cpu"):
 
     def is_ascii(s):
