@@ -5,8 +5,11 @@ from dataclasses import dataclass
 from tqdm import tqdm
 from typing import List, Optional, Union
 
+
 import torch
 import transformers
+import matplotlib.pyplot as plt
+
 from torch import Tensor
 from transformers import set_seed
 
@@ -193,11 +196,13 @@ class GCG:
             messages[-1]["content"] = messages[-1]["content"] + "{optim_str}"
 
         template = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True) 
+        print("TEMPLATE",template)
         # Remove the BOS token -- this will get added when tokenizing, if necessary
         if tokenizer.bos_token and template.startswith(tokenizer.bos_token):
             template = template.replace(tokenizer.bos_token, "")
         before_str, after_str = template.split("{optim_str}")
-
+        print("BEFORESTR",before_str)
+        print("AFTERSTR",after_str)
         target = " " + target if config.add_space_before_target else target
 
         # Tokenize everything that doesn't get optimized
@@ -284,6 +289,20 @@ class GCG:
             losses=losses,
             strings=optim_strings,
         )
+        
+
+        # PLOT
+        steps = list(range(1, config.num_steps + 1))
+        
+        plt.figure(figsize=(10,6))
+        plt.plot(steps, losses, marker='o', linestyle='-', color='b')
+        plt.title('Loss v steps')
+        plt.xlabel('Steps')
+        plt.ylabel('Loss')
+        plt.grid(True)
+        filename =  str(config.num_steps) + before_str
+        plt.savefig(filename)
+        plt.close()
 
         return result
     

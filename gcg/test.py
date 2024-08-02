@@ -5,7 +5,7 @@ from nanogcg import GCGConfig
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 
-device = torch.device("cuda:2" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
 model_id = "StruQ/models/llama-7b_SpclSpclSpcl_NaiveCompletion_2024-02-02-00-00-00"
 model = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=torch.float16, trust_remote_code=True).to(device)
 tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True, use_fast=False)
@@ -14,7 +14,7 @@ tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True, use_
 # decreasing batch size to? error
 # need to use template - ERROR
 config = GCGConfig(
-    num_steps=500,
+    num_steps=10,
     search_width=64,
     topk=64,
     seed=100,
