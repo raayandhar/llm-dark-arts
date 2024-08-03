@@ -185,16 +185,20 @@ class GCG:
         if config.seed is not None:
             set_seed(config.seed)
             torch.use_deterministic_algorithms(True, warn_only=True)
-    
         if isinstance(messages, str):
             messages = [{"role": "user", "content": messages}]
         else:
             messages = copy.deepcopy(messages)
-    
+
+        chat = [
+            {"role": "user", "content": '[MARK][INST][COLN] {prompt} [MARK][INPT][COLN] {optim_str} [MARK][RESP][COLN]'}]
+        print("MESSAGES",messages)
         # Append the GCG string at the end of the prompt if location not specified
         if not any(["{optim_str}" in d["content"] for d in messages]):
             messages[-1]["content"] = messages[-1]["content"] + "{optim_str}"
 
+        print("TEST4",messages[-1]["content"])
+        # TEMPLATE
         template = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True) 
         print("TEMPLATE",template)
         # Remove the BOS token -- this will get added when tokenizing, if necessary
