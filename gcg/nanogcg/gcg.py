@@ -172,7 +172,7 @@ class GCG:
 
         if model.device == torch.device("cpu"):
             print("WARNING: model is on the CPU. Use a hardware accelerator for faster optimization.")
-    
+
     def run(
         self,
         messages: Union[str, List[dict]],
@@ -181,7 +181,6 @@ class GCG:
         model = self.model
         tokenizer = self.tokenizer
         config = self.config
-
         if config.seed is not None:
             set_seed(config.seed)
             torch.use_deterministic_algorithms(True, warn_only=True)
@@ -190,23 +189,17 @@ class GCG:
         else:
             messages = copy.deepcopy(messages)
 
-        chat = [
-            {"role": "user", "content": '[MARK][INST][COLN] {prompt} [MARK][INPT][COLN] {optim_str} [MARK][RESP][COLN]'}]
-        print("MESSAGES",messages)
         # Append the GCG string at the end of the prompt if location not specified
         if not any(["{optim_str}" in d["content"] for d in messages]):
             messages[-1]["content"] = messages[-1]["content"] + "{optim_str}"
 
-        print("TEST4",messages[-1]["content"])
         # TEMPLATE
-        template = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True) 
-        print("TEMPLATE",template)
+        # the template still needs to be fixed!!!
+        template = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
         # Remove the BOS token -- this will get added when tokenizing, if necessary
         if tokenizer.bos_token and template.startswith(tokenizer.bos_token):
             template = template.replace(tokenizer.bos_token, "")
         before_str, after_str = template.split("{optim_str}")
-        print("BEFORESTR",before_str)
-        print("AFTERSTR",after_str)
         target = " " + target if config.add_space_before_target else target
 
         # Tokenize everything that doesn't get optimized
@@ -222,7 +215,7 @@ class GCG:
         with torch.no_grad():
             output = model(inputs_embeds=before_embeds, use_cache=True)
             self.prefix_cache = output.past_key_values
-        
+
         self.target_ids = target_ids
         self.after_embeds = after_embeds
         self.target_embeds = target_embeds
