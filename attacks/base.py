@@ -1,8 +1,3 @@
-"""
-This repository is heavily inspired by HarmBench's repository, in structure and some code,
-so much credit must go to them.
-"""
-
 import numpy as np
 import pytorch
 import os
