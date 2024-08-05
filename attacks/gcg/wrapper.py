@@ -2,7 +2,7 @@ import transformers
 import numpy as np
 import torch
 
-from typing import List
+from typing import List, Dict
 from dataclasses import dataclass
 
 @dataclass
@@ -48,5 +48,18 @@ class AttackBuffer:
             print(f"loss: {loss}" + f" | optim string: {optim_str}")
         print ("End buffer")
 
-class GCGUtil:
-    
+class GCG:
+    def __init__(self,
+                 model: transformers.PreTrainedModel,
+                 tokenizer: transformers.PreTrainedTokenizer,
+                 config: Dict
+    ):
+        self.model = model
+        self.tokenizer = tokenizer
+        self.config = config
+
+        self.embedding_layer = model.get_input_embeddings()
+        self.device = config["global_device"]
+        self.allow_non_ascii = config["allow_non_ascii"]
+        self.not_allowed_tokens = None if (len(config["not_allowed_tokens"]) == 0 and not self.allow_non_ascii) else get_not_allowed_ids(tokenizer, self.device, self.allow_non_ascii, config["not_allowed_tokens"])
+

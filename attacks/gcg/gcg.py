@@ -6,8 +6,8 @@ from typing import List
 from dataclasses import dataclass
 
 from ..base import Attack
-from .utils import GCGResult
-from .utils import AttackBuffer
+from .wrapper import GCGResult
+from .wrapper import AttackBuffer
 
 class GCG(Attack):
 
@@ -25,6 +25,7 @@ class GCG(Attack):
 
     :config_param adv_init: the initial adversarial string; expects string
     :config_param allow_non_ascii: are we going to allow non ascii tokens or not; expects boolean
+    :config_param not_allowed_tokens: other tokens we don't want to sample (i.e., delimiters)
     :config_param filter_ids: if you want to retain candidate sequences that are the same after tokenization and retokenization; expects boolean
     :config_param asbt: add a space before the target string; expects string
     :config_param seed: default 42, the answer to the life, the universe, and everything
@@ -33,6 +34,9 @@ class GCG(Attack):
     :config_param use_mellowmax: use the mellowmax loss function
     :config_param mellowmax_alpha: value of alpha in mellowmax loss function
     """
+
+    # Input
+    self.model = target_model
 
     # Core optimization and performance hyperparameters
     self.num_steps = config.get("num_steps", 250)
@@ -45,20 +49,21 @@ class GCG(Attack):
     # Not so important
     self.adv_init = config.get("adv_init", "! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! !")
     self.allow_non_ascii = config.get("allow_non_ascii", False)
+    self.not_allowed_tokens = config.get("not_allowed_tokens", [])
     self.filter_ids = config.get("filter_ids", True)
     # asbt = add_space_before_target
     self.asbt = config.get("abst", False)
     self.seed = config.get("seed", 42)
     self.verbose = config.get("verbose", False)
+    # TODO
+    # Make a simple cycling function in utils to automatically pick up a device that isn't being used
+    self.global_device = config.get("global_device", "cuda:0")
 
     # Research choices
     self.use_mellowmax = config.get("use_mellowmax", False)
     self.mellowmax_alpha = config.get("mellowmax_alpha", 0)
     # make sure to add other options for loss functions
     # TODO
-
-    
-
 
     def attack(self, args):
         pass
