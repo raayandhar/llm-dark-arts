@@ -30,6 +30,8 @@ class GCG(Attack):
     :config_param asbt: add a space before the target string; expects string
     :config_param seed: default 42, the answer to the life, the universe, and everything
     :config_param verbose: be verbose when running the attack
+    :config_param filename: name of the file for the logs and the plot
+    :config_param global_device: which device to use across all
 
     :config_param use_mellowmax: use the mellowmax loss function
     :config_param mellowmax_alpha: value of alpha in mellowmax loss function
@@ -55,6 +57,7 @@ class GCG(Attack):
     self.asbt = config.get("abst", False)
     self.seed = config.get("seed", 42)
     self.verbose = config.get("verbose", False)
+    self.filename = config.get("filename", "StruQ")
     # TODO
     # Make a simple cycling function in utils to automatically pick up a device that isn't being used
     self.global_device = config.get("global_device", "cuda:0")
