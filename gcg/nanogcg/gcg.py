@@ -297,7 +297,7 @@ class GCG:
         plt.xlabel('Steps')
         plt.ylabel('Loss')
         plt.grid(True)
-        filename =  str(config.num_steps) + before_str
+        filename =  str(config.num_steps) + before_str + ".png"
         plt.savefig(filename)
         plt.close()
 
